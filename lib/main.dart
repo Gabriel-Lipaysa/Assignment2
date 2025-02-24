@@ -1,6 +1,6 @@
 import 'package:act2/model/product.dart';
 import 'package:flutter/material.dart';
-import 'package:realm/realm.dart';
+
 import 'package:provider/provider.dart';
 
 void main() {
@@ -12,47 +12,25 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: ChangeNotifierProvider(
-        create: (context) => Products(),
-        child: MainScreen(),
-      ),
+    return MultiProvider(
+      providers: [
+        Provider<Products>(create: (context) => Products()),
+      ],
+      child: MainScreen(),
     );
   }
 }
 
-class MainScreen extends StatefulWidget {
+class MainScreen extends StatelessWidget {
   MainScreen({super.key});
 
-  @override
-  State<MainScreen> createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
   var codeCtrl = TextEditingController();
+
   var nameCtrl = TextEditingController();
+
   var priceCtrl = TextEditingController();
+
   // var config = Configuration.local([Product.schema]);
-  // late RealmResults<Product> items;
-  // late Realm realm;
-
-  // void innitRealm() {
-  //   realm = Realm(config);
-  //   loadRealm();
-  // }
-
-  // void loadRealm() {
-  //   items = realm.all<Product>();
-
-  //   print(items);
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   innitRealm();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<Products>(
@@ -132,13 +110,9 @@ class _MainScreenState extends State<MainScreen> {
                   child: Text('Cancel')),
               ElevatedButton(
                   onPressed: () {
-                    //loadRealm();
-                    // realm.write(() {
-                    //   var item = Product(codeCtrl.text, nameCtrl.text,
-                    //       double.parse(priceCtrl.text));
-                    //   Provider.of<Products>(context).update();
-                    //   var result = realm.add(item);
-                    // });
+                    var prod = Product(codeCtrl.text, nameCtrl.text,
+                        double.parse(priceCtrl.text));
+                    Provider.of<Products>(context, listen: false).add(prod);
                     codeCtrl.clear();
                     nameCtrl.clear();
                     priceCtrl.clear();
